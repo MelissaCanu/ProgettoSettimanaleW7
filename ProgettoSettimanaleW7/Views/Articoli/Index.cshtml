@@ -1,1 +1,32 @@
-﻿
+﻿@model IEnumerable<ProgettoSettimanaleW7.Models.Articoli>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 d-flex align-items-stretch">
+            <div class="card flex-fill">
+                <img class="card-img-top img-fluid" src="@Url.Content(item.Immagine)" alt="@item.Nome" />
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">@Html.DisplayFor(modelItem => item.Nome)</h5>
+                    <p class="card-text">Prezzo: @Html.DisplayFor(modelItem => item.Prezzo)</p>
+                    <p class="card-text">Tempo Consegna: @Html.DisplayFor(modelItem => item.TempoConsegna)</p>
+                    <div class="mt-auto">
+                        <a href="@Url.Action("Edit", "Articoli", new { id = item.IdArticolo })" class="btn btn-primary">Edit</a>
+                        <a href="@Url.Action("Details", "Articoli", new { id = item.IdArticolo })" class="btn btn-primary">Details</a>
+                        <a href="@Url.Action("Delete", "Articoli", new { id = item.IdArticolo })" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
