@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Details";
+    // Recupero il valore della variabile IsUserAdmin dalla ViewBag per capire se l'utente è admin o meno
+    var isUserAdmin = ViewBag.IsUserAdmin;
 }
 
 <h2 class="text-bg-primary text-center">Dettagli</h2>
@@ -13,8 +15,11 @@
             <div class="card-body">
                 <h5 class="card-title">@Html.DisplayFor(model => model.Nome)</h5>
                 <p class="card-text">Prezzo: @Html.DisplayFor(model => model.Prezzo)</p>
-                <p class="card-text">Tempo Consegna: @Html.DisplayFor(model => model.TempoConsegna)</p>
-                <a href="@Url.Action("Edit", "Articoli", new { id = Model.IdArticolo })" class="btn btn-warning my-2">Modifica</a>
+                <p class="card-text">Tempo di consegna: @Html.DisplayFor(model => model.TempoConsegna) minuti</p>
+                @if (isUserAdmin) //Se l'utente è admin, mostro il pulsante per modificare 
+                {
+                    <a href="@Url.Action("Edit", "Articoli", new { id = Model.IdArticolo })" class="btn btn-warning my-2">Modifica</a>
+                }
                 <a href="@Url.Action("Index", "Articoli")" class="btn btn-light">Indietro</a>
             </div>
         </div>

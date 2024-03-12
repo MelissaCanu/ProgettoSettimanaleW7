@@ -12,12 +12,19 @@ using ProgettoSettimanaleW7.Models;
 namespace ProgettoSettimanaleW7.Controllers
 {
     public class ArticoliController : Controller
+        
+        //modeldbcontext mi permette di accedere al database e di eseguire le operazioni CRUD
     {
         private ModelDbContext db = new ModelDbContext();
 
         // GET: Articoli
         public ActionResult Index()
-        {
+        {   
+            //Controllo se l'utente è admin
+            var isUserAdmin = User.IsInRole("Admin");
+            //Passo alla view la variabile isUserAdmin
+            //che mi permette di visualizzare o meno i pulsanti di modifica e cancellazione
+            ViewBag.isUserAdmin = isUserAdmin;
             return View(db.Articoli.ToList());
         }
 
@@ -28,11 +35,14 @@ namespace ProgettoSettimanaleW7.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            //Find mi permette di trovare un articolo in base all'id
             Articoli articoli = db.Articoli.Find(id);
             if (articoli == null)
             {
                 return HttpNotFound();
             }
+            //Passo alla view la variabile isUserAdmin per visualizzare o meno i pulsanti di modifica e cancellazione
+            ViewBag.IsUserAdmin = User.IsInRole("Admin");
             return View(articoli);
         }
 

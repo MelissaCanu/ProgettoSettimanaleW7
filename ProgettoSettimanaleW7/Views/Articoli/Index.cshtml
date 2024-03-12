@@ -2,12 +2,16 @@
 
 @{
     ViewBag.Title = "Index";
+    var isUserAdmin = ViewBag.IsUserAdmin; // Recupero il valore della variabile IsUserAdmin dalla ViewBag per capire se l'utente è admin o meno
 }
 
 <h2>Le nostre pizze</h2>
 
 <p>
-    @Html.ActionLink("Aggiungi nuova", "Create", null, new {@class = "btn btn-success"})
+    @if (isUserAdmin)
+    {
+        @Html.ActionLink("Aggiungi nuova", "Create", null, new { @class = "btn btn-success" })
+    }
 </p>
 
 <div class="row">
@@ -19,11 +23,19 @@
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">@Html.DisplayFor(modelItem => item.Nome)</h5>
                     <p class="card-text">Prezzo: @Html.DisplayFor(modelItem => item.Prezzo)</p>
-                    <p class="card-text">Tempo Consegna: @Html.DisplayFor(modelItem => item.TempoConsegna)</p>
+                    <p class="card-text">Tempo di consegna: @Html.DisplayFor(modelItem => item.TempoConsegna) minuti</p>
                     <div class="mt-auto">
-                        <a href="@Url.Action("Edit", "Articoli", new { id = item.IdArticolo })" class="btn btn-warning">Modifica</a>
-                        <a href="@Url.Action("Details", "Articoli", new { id = item.IdArticolo })" class="btn btn-info">Dettagli</a>
-                        <a href="@Url.Action("Delete", "Articoli", new { id = item.IdArticolo })" class="btn btn-danger">Cancella</a>
+                        @if (isUserAdmin)
+                        {
+                            <a href="@Url.Action("Edit", "Articoli", new { id = item.IdArticolo })" class="btn btn-warning">Modifica</a>
+                            <a href="@Url.Action("Details", "Articoli", new { id = item.IdArticolo })" class="btn btn-info">Dettagli</a>
+                            <a href="@Url.Action("Delete", "Articoli", new { id = item.IdArticolo })" class="btn btn-danger">Cancella</a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Details", "Articoli", new { id = item.IdArticolo })" class="btn btn-info">Dettagli</a>
+                            
+                        }
                     </div>
                 </div>
             </div>
