@@ -11,6 +11,7 @@ using ProgettoSettimanaleW7.Models;
 
 namespace ProgettoSettimanaleW7.Controllers
 {
+    [Authorize(Roles = "Admin")] 
     public class ArticoliController : Controller
         
         //modeldbcontext mi permette di accedere al database e di eseguire le operazioni CRUD
@@ -18,6 +19,7 @@ namespace ProgettoSettimanaleW7.Controllers
         private ModelDbContext db = new ModelDbContext();
 
         // GET: Articoli
+        [AllowAnonymous]
         public ActionResult Index()
         {   
             //Controllo se l'utente è admin
@@ -29,6 +31,7 @@ namespace ProgettoSettimanaleW7.Controllers
         }
 
         // GET: Articoli/Details/5
+        [AllowAnonymous]
         public ActionResult Details(int? id)
         {
             if (id == null)

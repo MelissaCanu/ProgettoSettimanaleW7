@@ -12,6 +12,7 @@ using ProgettoSettimanaleW7.Models;
 
 namespace ProgettoSettimanaleW7.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UtentiController : Controller
     {
         private ModelDbContext db = new ModelDbContext();
@@ -127,11 +128,14 @@ namespace ProgettoSettimanaleW7.Controllers
         }
 
         //Login 
+        [AllowAnonymous]
 
         public ActionResult Login()
         {
             return View();
         }
+
+        [AllowAnonymous]
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -174,6 +178,7 @@ namespace ProgettoSettimanaleW7.Controllers
         }
 
         //Logout
+        [AllowAnonymous]
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
@@ -181,11 +186,13 @@ namespace ProgettoSettimanaleW7.Controllers
         }
 
         //Registrazione
+        [AllowAnonymous]
         public ActionResult Registrazione()
         {
             return View();
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Registrazione([Bind(Include = "IdUtente,Username,Password")] Utenti utenti)
