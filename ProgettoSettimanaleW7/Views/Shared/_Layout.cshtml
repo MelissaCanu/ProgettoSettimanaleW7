@@ -24,6 +24,23 @@
                 <ul class="navbar-nav flex-grow-1">
                     <li>@Html.ActionLink("Pizze", "Index", "Articoli", new { area = "" }, new { @class = "nav-link" })</li>
                 </ul>
+                <ul class="navbar-nav">
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <p class="nav-link">Bentornato, @User.Identity.Name!</p>
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Logout", "Logout", "Utenti", null, new { @class = "btn btn-dark" })
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Login", "Login", "Utenti", null, new { @class = "btn btn-secondary" })
+                        </li>
+                    }
+                </ul>
             </div>
         </div>
     </nav>

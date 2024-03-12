@@ -1,10 +1,10 @@
 ﻿@model ProgettoSettimanaleW7.Models.Utenti
 
 @{
-    ViewBag.Title = "Login";
+    ViewBag.Title = "Registrazione";
 }
 
-<h2>Login</h2>
+<h2>Registrazione</h2>
 
 
 @using (Html.BeginForm()) 
@@ -33,15 +33,11 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Login" class="btn btn-secondary my-2" />
+                <input type="submit" value="Registrati" class="btn btn-info" />
             </div>
         </div>
     </div>
 }
-
-<div>
-    Non hai un account? @Html.ActionLink("Registrati qui", "Registrazione", null, new { @class = "btn btn-info" })
-</div>
 
 <div>
     @Html.ActionLink("Indietro", "Index", null, new {@class = "btn btn-light"})

@@ -203,6 +203,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202403121015170_InitialCreate.cs" />
+    <Compile Include="Migrations\202403121015170_InitialCreate.designer.cs">
+      <DependentUpon>202403121015170_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202403121614353_RuoloDA.cs" />
+    <Compile Include="Migrations\202403121614353_RuoloDA.designer.cs">
+      <DependentUpon>202403121614353_RuoloDA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Articoli.cs" />
     <Compile Include="Models\CustomRoleProvider.cs" />
     <Compile Include="Models\DettagliOrdini.cs" />
@@ -297,6 +306,7 @@
     <Content Include="Views\Utenti\Edit.cshtml" />
     <Content Include="Views\Utenti\Index.cshtml" />
     <Content Include="Views\Utenti\Login.cshtml" />
+    <Content Include="Views\Utenti\Registrazione.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -376,6 +386,14 @@
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.4\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.4\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202403121015170_InitialCreate.resx">
+      <DependentUpon>202403121015170_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202403121614353_RuoloDA.resx">
+      <DependentUpon>202403121614353_RuoloDA.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

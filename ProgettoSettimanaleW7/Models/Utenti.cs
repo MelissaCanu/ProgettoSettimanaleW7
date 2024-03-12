@@ -22,7 +22,7 @@ namespace ProgettoSettimanaleW7.Models
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Required]
+        
         [StringLength(50)]
         public string Ruolo { get; set; }
     }

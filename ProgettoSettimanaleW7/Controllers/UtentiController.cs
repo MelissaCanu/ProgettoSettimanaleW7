@@ -150,10 +150,13 @@ namespace ProgettoSettimanaleW7.Controllers
                     string[] roles = roleProvider.GetRolesForUser(utenti.Username);
                     if (roles.Contains("Admin"))
                     {
+                        TempData["SuccessMessage"] = "Login effettuato con successo!";
+
                         return RedirectToAction("Index", "Home");
                     }
                     else
                     {
+                        TempData["SuccessMessage"] = "Login effettuato con successo!";
                         return RedirectToAction("Index", "Home");
                     }
                 }
@@ -167,6 +170,45 @@ namespace ProgettoSettimanaleW7.Controllers
                 ModelState.AddModelError("", "Username non valido");
             }
 
+            return View(utenti);
+        }
+
+        //Logout
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Index", "Home");
+        }
+
+        //Registrazione
+        public ActionResult Registrazione()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Registrazione([Bind(Include = "IdUtente,Username,Password")] Utenti utenti)
+        {
+            if (ModelState.IsValid)
+            {
+                //Verifico se esiste già user con stesso username
+                var existingUser = db.Utenti.FirstOrDefault(u => u.Username == utenti.Username);
+                if (existingUser != null)
+                { 
+                    ModelState.AddModelError("", "Username già esistente");
+                    return View(utenti);
+                }
+                //Assegno il ruolo default "User" ai nuovi utenti
+                utenti.Ruolo = "User";
+
+                //Aggiungo l'utente al database e salvo le modifiche
+                db.Utenti.Add(utenti);
+                db.SaveChanges();
+                TempData["SuccessMessage"] = "Registrazione effettuata con successo!";
+                return RedirectToAction("Index", "Home");
+            }
+            TempData["ErrorMessage"] = "Si è verificato un errore durante la registrazione.";
             return View(utenti);
         }
 
