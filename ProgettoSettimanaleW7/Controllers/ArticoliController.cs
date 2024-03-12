@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -46,10 +47,18 @@ namespace ProgettoSettimanaleW7.Controllers
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IdArticolo,Nome,Immagine,Prezzo,TempoConsegna")] Articoli articoli)
+        public ActionResult Create(Articoli articoli, HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
             {
+                if (file != null && file.ContentLength > 0)
+                {
+                    var fileName = Path.GetFileName(file.FileName);
+                    var path = Path.Combine(Server.MapPath("~/Content/img/"), fileName);
+                    file.SaveAs(path);
+                    articoli.Immagine = fileName;  // Salva il nome del file nel campo Immagine
+                }
+
                 db.Articoli.Add(articoli);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -57,6 +66,7 @@ namespace ProgettoSettimanaleW7.Controllers
 
             return View(articoli);
         }
+
 
         // GET: Articoli/Edit/5
         public ActionResult Edit(int? id)
@@ -78,10 +88,18 @@ namespace ProgettoSettimanaleW7.Controllers
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IdArticolo,Nome,Immagine,Prezzo,TempoConsegna")] Articoli articoli)
+        public ActionResult Edit(int id, Articoli articoli, HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
             {
+                if (file != null && file.ContentLength > 0)
+                {
+                    var fileName = Path.GetFileName(file.FileName);
+                    var path = Path.Combine(Server.MapPath("~/Content/img/"), fileName);
+                    file.SaveAs(path);
+                    articoli.Immagine = fileName;  // Salva il nome del file nel campo Immagine
+                }
+
                 db.Entry(articoli).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
