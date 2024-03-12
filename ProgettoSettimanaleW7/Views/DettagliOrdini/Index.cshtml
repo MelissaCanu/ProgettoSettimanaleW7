@@ -1,0 +1,51 @@
+﻿@model IEnumerable<ProgettoSettimanaleW7.Models.DettagliOrdini>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Articoli.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Ordini.Indirizzo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Quantita)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PrezzoTotale)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Articoli.Nome)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Ordini.Indirizzo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Quantita)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PrezzoTotale)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IdDettagliOrdine }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IdDettagliOrdine }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IdDettagliOrdine })
+        </td>
+    </tr>
+}
+
+</table>
