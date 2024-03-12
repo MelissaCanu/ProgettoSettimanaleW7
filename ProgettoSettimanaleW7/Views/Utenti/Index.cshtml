@@ -7,7 +7,7 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Aggiungi Utente", "Create", null, new {@class = "btn btn-success"})
 </p>
 <table class="table">
     <tr>
@@ -35,9 +35,9 @@
             @Html.DisplayFor(modelItem => item.Ruolo)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.IdUtente }) |
-            @Html.ActionLink("Details", "Details", new { id=item.IdUtente }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.IdUtente })
+            @Html.ActionLink("Modifica", "Edit", new { id=item.IdUtente }, new {@class = "btn btn-warning"}) |
+            @Html.ActionLink("Dettagli", "Details", new { id=item.IdUtente }, new { @class = "btn btn-info" }) |
+            @Html.ActionLink("Elimina", "Delete", new { id=item.IdUtente }, new { @class = "btn btn-danger" })
         </td>
     </tr>
 }
