@@ -4,7 +4,7 @@
     ViewBag.Title = "Edit";
 }
 
-<h2>Edit</h2>
+<h2 class="text-bg-primary text-center">Modifica</h2>
 
 
 @using (Html.BeginForm())
@@ -58,7 +58,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Indietro", "Index", null, new {@class ="btn btn-light"})
 </div>
 
 @section Scripts {

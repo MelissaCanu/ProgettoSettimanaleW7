@@ -4,7 +4,7 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2 class="text-bg-primary text-center">Dettagli</h2>
 
 <div class="row">
     <div class="col-md-6">
@@ -14,8 +14,8 @@
                 <h5 class="card-title">@Html.DisplayFor(model => model.Nome)</h5>
                 <p class="card-text">Prezzo: @Html.DisplayFor(model => model.Prezzo)</p>
                 <p class="card-text">Tempo Consegna: @Html.DisplayFor(model => model.TempoConsegna)</p>
-                <a href="@Url.Action("Edit", "Articoli", new { id = Model.IdArticolo })" class="btn btn-primary">Edit</a>
-                <a href="@Url.Action("Index", "Articoli")" class="btn btn-primary">Back to List</a>
+                <a href="@Url.Action("Edit", "Articoli", new { id = Model.IdArticolo })" class="btn btn-warning my-2">Modifica</a>
+                <a href="@Url.Action("Index", "Articoli")" class="btn btn-light">Indietro</a>
             </div>
         </div>
     </div>

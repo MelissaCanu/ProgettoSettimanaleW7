@@ -4,10 +4,10 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Le nostre pizze</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Aggiungi nuova", "Create", null, new {@class = "btn btn-success"})
 </p>
 
 <div class="row">
@@ -21,9 +21,9 @@
                     <p class="card-text">Prezzo: @Html.DisplayFor(modelItem => item.Prezzo)</p>
                     <p class="card-text">Tempo Consegna: @Html.DisplayFor(modelItem => item.TempoConsegna)</p>
                     <div class="mt-auto">
-                        <a href="@Url.Action("Edit", "Articoli", new { id = item.IdArticolo })" class="btn btn-primary">Edit</a>
-                        <a href="@Url.Action("Details", "Articoli", new { id = item.IdArticolo })" class="btn btn-primary">Details</a>
-                        <a href="@Url.Action("Delete", "Articoli", new { id = item.IdArticolo })" class="btn btn-danger">Delete</a>
+                        <a href="@Url.Action("Edit", "Articoli", new { id = item.IdArticolo })" class="btn btn-warning">Modifica</a>
+                        <a href="@Url.Action("Details", "Articoli", new { id = item.IdArticolo })" class="btn btn-info">Dettagli</a>
+                        <a href="@Url.Action("Delete", "Articoli", new { id = item.IdArticolo })" class="btn btn-danger">Cancella</a>
                     </div>
                 </div>
             </div>
