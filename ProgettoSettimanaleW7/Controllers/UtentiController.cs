@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ProgettoSettimanaleW7.Models;
 
 namespace ProgettoSettimanaleW7.Controllers
@@ -123,5 +125,50 @@ namespace ProgettoSettimanaleW7.Controllers
             }
             base.Dispose(disposing);
         }
+
+        //Login 
+
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(Utenti utenti)
+        {
+            // Cerco l'utente nel database in base allo username inserito dall'utente
+            var userInDb = db.Utenti.FirstOrDefault(u => u.Username == utenti.Username);
+
+            if (userInDb != null)
+            {
+                // Verifico la password inserita dall'utente con quella presente nel database
+                if (userInDb.Password == utenti.Password)
+                {
+                    FormsAuthentication.SetAuthCookie(utenti.Username, false);
+                    RoleProvider roleProvider = Roles.Provider;
+                    string[] roles = roleProvider.GetRolesForUser(utenti.Username);
+                    if (roles.Contains("Admin"))
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Password non valida");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Username non valido");
+            }
+
+            return View(utenti);
+        }
+
     }
 }
