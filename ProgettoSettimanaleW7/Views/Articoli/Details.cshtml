@@ -16,7 +16,19 @@
                 <h5 class="card-title">@Html.DisplayFor(model => model.Nome)</h5>
                 <p class="card-text">Prezzo: @Html.DisplayFor(model => model.Prezzo)</p>
                 <p class="card-text">Tempo di consegna: @Html.DisplayFor(model => model.TempoConsegna) minuti</p>
-                @if (isUserAdmin) //Se l'utente è admin, mostro il pulsante per modificare 
+
+                @*Se l'utente è autenticato e non è admin, mostro il pulsante per aggiungere al carrello e la quantità da aggiungere*@
+
+                @if (Request.IsAuthenticated && !isUserAdmin) //request è un oggetto che rappresenta la richiesta HTTP corrente
+                {
+                    using (Html.BeginForm("AddToCart", "Cart"))
+                    {
+                        <input type="hidden" name="productId" value="@Model.IdArticolo" />
+                        <input type="number" name="quantity" min="1" max="99" value="1" />
+                        <input type="submit" value="Add to cart" />
+                    }
+                }
+                @if (isUserAdmin) //Se l'utente è admin, mostro il pulsante per modificare
                 {
                     <a href="@Url.Action("Edit", "Articoli", new { id = Model.IdArticolo })" class="btn btn-warning my-2">Modifica</a>
                 }
