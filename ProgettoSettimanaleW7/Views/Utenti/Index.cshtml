@@ -4,10 +4,10 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2 class="text-bg-primary text-center">Utenti</h2>
 
 <p>
-    @Html.ActionLink("Aggiungi Utente", "Create", null, new {@class = "btn btn-success"})
+    @Html.ActionLink("Aggiungi Utente", "Create", null, new { @class = "btn btn-success" })
 </p>
 <table class="table">
     <tr>
@@ -23,23 +23,24 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Username)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Password)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Ruolo)
-        </td>
-        <td>
-            @Html.ActionLink("Modifica", "Edit", new { id=item.IdUtente }, new {@class = "btn btn-warning"}) |
-            @Html.ActionLink("Dettagli", "Details", new { id=item.IdUtente }, new { @class = "btn btn-info" }) |
-            @Html.ActionLink("Elimina", "Delete", new { id=item.IdUtente }, new { @class = "btn btn-danger" })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ruolo)
+            </td>
+            <td>
+                @Html.ActionLink("Modifica", "Edit", new { id = item.IdUtente }, new { @class = "btn btn-warning" }) |
+                @Html.ActionLink("Dettagli", "Details", new { id = item.IdUtente }, new { @class = "btn btn-info" }) |
+                @Html.ActionLink("Elimina", "Delete", new { id = item.IdUtente }, new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+    }
 
 </table>
