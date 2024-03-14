@@ -21,7 +21,7 @@
 
                 @if (Request.IsAuthenticated && !isUserAdmin) //request è un oggetto che rappresenta la richiesta HTTP corrente
                 {
-                    using (Html.BeginForm("AddToCart", "Cart"))
+                    using (Html.BeginForm("AddToCart", "Articoli"))
                     {
                         <input type="hidden" name="productId" value="@Model.IdArticolo" />
                         <input type="number" name="quantity" min="1" max="99" value="1" />

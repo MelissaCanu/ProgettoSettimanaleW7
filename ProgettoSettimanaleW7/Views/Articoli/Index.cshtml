@@ -27,7 +27,7 @@
 @*Se l'utente è autenticato e non è admin, mostro il pulsante per aggiungere al carrello e la quantità da aggiungere*@
                     @if (Request.IsAuthenticated && !isUserAdmin)
                     {
-                        using (Html.BeginForm("AddToCart", "Cart"))
+                        using (Html.BeginForm("AddToCart", "Articoli"))
                         {
                             <input type="hidden" name="productId" value="@item.IdArticolo" />
                             <input type="number" name="quantity" min="1" max="99" value="1" />

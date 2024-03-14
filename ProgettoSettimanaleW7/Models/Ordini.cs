@@ -15,7 +15,6 @@ namespace ProgettoSettimanaleW7.Models
         [ForeignKey("Utenti")]
         public int IdUtente { get; set; }
 
-        [Required]
         [StringLength(100)]
         public string Indirizzo { get; set; }
 

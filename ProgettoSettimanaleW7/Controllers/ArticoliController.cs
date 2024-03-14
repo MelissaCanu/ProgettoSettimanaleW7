@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -11,7 +12,7 @@ using ProgettoSettimanaleW7.Models;
 
 namespace ProgettoSettimanaleW7.Controllers
 {
-    [Authorize(Roles = "Admin")] 
+    
     public class ArticoliController : Controller
         
         //modeldbcontext mi permette di accedere al database e di eseguire le operazioni CRUD
@@ -50,6 +51,8 @@ namespace ProgettoSettimanaleW7.Controllers
         }
 
         // GET: Articoli/Create
+
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             return View();
@@ -60,6 +63,7 @@ namespace ProgettoSettimanaleW7.Controllers
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(Articoli articoli, HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
@@ -82,7 +86,10 @@ namespace ProgettoSettimanaleW7.Controllers
 
 
         // GET: Articoli/Edit/5
+        [Authorize(Roles = "Admin")]
+
         public ActionResult Edit(int? id)
+
         {
             if (id == null)
             {
@@ -101,6 +108,8 @@ namespace ProgettoSettimanaleW7.Controllers
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         public ActionResult Edit(int id, Articoli articoli, HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
@@ -121,6 +130,8 @@ namespace ProgettoSettimanaleW7.Controllers
         }
 
         // GET: Articoli/Delete/5
+        [Authorize(Roles = "Admin")]
+
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -138,6 +149,8 @@ namespace ProgettoSettimanaleW7.Controllers
         // POST: Articoli/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         public ActionResult DeleteConfirmed(int id)
         {
             Articoli articoli = db.Articoli.Find(id);
@@ -154,5 +167,55 @@ namespace ProgettoSettimanaleW7.Controllers
             }
             base.Dispose(disposing);
         }
+
+        //CARRELLO
+
+        [HttpPost]
+        [Authorize(Roles = "User")]
+        public ActionResult AddToCart(int productId, int quantity)
+        {
+            // Recupera l'utente corrente
+            var user = db.Utenti.FirstOrDefault(u => u.Username == User.Identity.Name);
+            if (user == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // Cerca un ordine esistente non evaso per l'utente corrente
+            var order = db.Ordini.SingleOrDefault(o => o.IdUtente == user.IdUtente && !o.IsEvaso);
+
+            // Se non esiste un ordine, creane uno nuovo
+            if (order == null)
+            {
+                order = new Ordini { IdUtente = user.IdUtente, IsEvaso = false, DettagliOrdini = new List<DettagliOrdini>() };
+                db.Ordini.Add(order);
+            }
+
+            // Aggiungi il prodotto all'ordine
+            var product = db.Articoli.Find(productId);
+            order.DettagliOrdini.Add(new DettagliOrdini { Articoli = product, Quantita = quantity, PrezzoTotale = product.Prezzo * quantity });
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                foreach (var entityValidationErrors in ex.EntityValidationErrors)
+                {
+                    foreach (var validationError in entityValidationErrors.ValidationErrors)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Property: " + validationError.PropertyName + " Error: " + validationError.ErrorMessage);
+                    }
+                }
+            }
+
+            // Reindirizza alla pagina di riepilogo dell'ordine
+            return RedirectToAction("Details", "Ordini", new { id = order.IdOrdine });
+        }
+
+
+
+
     }
 }

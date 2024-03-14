@@ -1,0 +1,28 @@
+﻿@model ProgettoSettimanaleW7.Models.Ordini
+
+@{
+    ViewBag.Title = "Checkout";
+}
+
+<h2>Riepilogo ordine</h2>
+
+@foreach (var item in Model.DettagliOrdini)
+{
+    <p>@item.Articoli.Nome: @item.Quantita x @item.Articoli.Prezzo = @item.PrezzoTotale</p>
+}
+
+<p>Costo totale: @Model.DettagliOrdini.Sum(i => i.PrezzoTotale)</p>
+
+@using (Html.BeginForm("CompleteOrder", "Ordini"))
+{
+    @Html.HiddenFor(model => model.IdOrdine)
+    <div class="form-group">
+        <label for="shippingAddress">Indirizzo di spedizione</label>
+        <input type="text" class="form-control" id="shippingAddress" name="shippingAddress" required>
+    </div>
+    <div class="form-group">
+        <label for="notes">Note</label>
+        <textarea class="form-control" id="notes" name="notes"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Concludi ordine</button>
+}
