@@ -26,7 +26,8 @@
                     @if (User.IsInRole("Admin"))
                     {
                         <li>@Html.ActionLink("Utenti", "Index", "Utenti", new { area = "" }, new { @class = "nav-link" })</li>
-                    }
+                        <li>@Html.ActionLink("Ordini", "ManageOrders", "Ordini", new { area = "" }, new { @class = "nav-link" })</li>
+                        }
                     @if (User.IsInRole("User"))
                     {
                         <li>@Html.ActionLink("Checkout", "Checkout", "Ordini", new { area = "" }, new { @class = "nav-link" })</li>

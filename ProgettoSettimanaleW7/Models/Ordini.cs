@@ -18,6 +18,7 @@ namespace ProgettoSettimanaleW7.Models
         [StringLength(100)]
         public string Indirizzo { get; set; }
 
+        [Display(Name = "Evaso")]
         public bool IsEvaso { get; set; }
 
         [StringLength(200)]
