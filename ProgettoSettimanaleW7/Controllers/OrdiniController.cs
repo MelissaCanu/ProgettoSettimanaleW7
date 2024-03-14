@@ -179,7 +179,6 @@ namespace ProgettoSettimanaleW7.Controllers
             }
 
             order.Note = notes;
-            order.IsEvaso = true;
 
             if (ModelState.IsValid)
             {
@@ -261,7 +260,32 @@ namespace ProgettoSettimanaleW7.Controllers
             return View(ordini);
         }
 
+        //ORDINI - GESTIONE & EVASIONE - ADMIN
 
+        [Authorize(Roles ="Admin")]
+        public ActionResult ManageOrders()
+        {
+            var orders = db.Ordini.ToList();
+            return View(orders);
+        }
+
+        [HttpPost]
+        [Authorize(Roles ="Admin")]
+        public ActionResult MarkAsEvaso(int id)
+        {
+            var order = db.Ordini.Find(id);
+            if (order == null)
+            {
+                return HttpNotFound();
+            }
+
+            //se l'ordine non è evaso, lo evado e salvo le modifiche nel db
+            order.IsEvaso = true;
+            db.Entry(order).State = EntityState.Modified;
+            db.SaveChanges();
+
+            return RedirectToAction("ManageOrders");
+        }
 
 
     }

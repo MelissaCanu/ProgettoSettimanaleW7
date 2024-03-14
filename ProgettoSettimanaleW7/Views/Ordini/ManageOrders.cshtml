@@ -1,0 +1,36 @@
+﻿@model IEnumerable<ProgettoSettimanaleW7.Models.Ordini>
+
+@{
+    ViewBag.Title = "Gestione ordini";
+}
+
+<h2>Gestione ordini</h2>
+
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.Utenti.Username)</th>
+        <th>@Html.DisplayNameFor(model => model.Indirizzo)</th>
+        <th>@Html.DisplayNameFor(model => model.IsEvaso)</th>
+        <th>@Html.DisplayNameFor(model => model.Note)</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.Utenti.Username)</td>
+            <td>@Html.DisplayFor(modelItem => item.Indirizzo)</td>
+            <td>@Html.DisplayFor(modelItem => item.IsEvaso)</td>
+            <td>@Html.DisplayFor(modelItem => item.Note)</td>
+            <td>
+                @if (!item.IsEvaso)
+                {
+                    using (Html.BeginForm("MarkAsEvaso", "Ordini", new { id = item.IdOrdine }, FormMethod.Post))
+                    {
+                        <input type="submit" value="Segna come evaso" />
+                    }
+                }
+            </td>
+        </tr>
+    }
+</table>

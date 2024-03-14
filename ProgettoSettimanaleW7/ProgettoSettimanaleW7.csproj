@@ -309,6 +309,7 @@
     <Content Include="Views\Utenti\Registrazione.cshtml" />
     <Content Include="Views\Ordini\Checkout.cshtml" />
     <Content Include="Views\Ordini\UserDetails.cshtml" />
+    <Content Include="Views\Ordini\ManageOrders.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
