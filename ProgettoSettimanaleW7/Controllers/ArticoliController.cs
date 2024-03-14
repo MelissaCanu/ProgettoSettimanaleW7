@@ -178,7 +178,7 @@ namespace ProgettoSettimanaleW7.Controllers
             var user = db.Utenti.FirstOrDefault(u => u.Username == User.Identity.Name);
             if (user == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Utente non trovato");
             }
 
             // Cerca un ordine esistente non evaso per l'utente corrente
@@ -193,11 +193,16 @@ namespace ProgettoSettimanaleW7.Controllers
 
             // Aggiungi il prodotto all'ordine
             var product = db.Articoli.Find(productId);
+            if (product == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound, "Prodotto non trovato");
+            }
             order.DettagliOrdini.Add(new DettagliOrdini { Articoli = product, Quantita = quantity, PrezzoTotale = product.Prezzo * quantity });
 
             try
             {
                 db.SaveChanges();
+                TempData["SuccessMessage"] = "Prodotto aggiunto al carrello con successo!";
             }
             catch (DbEntityValidationException ex)
             {
@@ -208,11 +213,14 @@ namespace ProgettoSettimanaleW7.Controllers
                         System.Diagnostics.Debug.WriteLine("Property: " + validationError.PropertyName + " Error: " + validationError.ErrorMessage);
                     }
                 }
+                TempData["ErrorMessage"] = "Errore durante il salvataggio dei dati";
             }
 
             // Reindirizza alla pagina di riepilogo dell'ordine
-            return RedirectToAction("Details", "Ordini", new { id = order.IdOrdine });
+            return RedirectToAction("Index");
         }
+
+
 
 
 

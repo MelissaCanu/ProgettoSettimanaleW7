@@ -3,8 +3,22 @@
 @{
     ViewBag.Title = "Details";
     // Recupero il valore della variabile IsUserAdmin dalla ViewBag per capire se l'utente è admin o meno
-    var isUserAdmin = ViewBag.IsUserAdmin;
+    var isUserAdmin = User.IsInRole("Admin");
 }
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 
 <h2 class="text-bg-primary text-center">Dettagli</h2>
 
@@ -25,7 +39,27 @@
                     {
                         <input type="hidden" name="productId" value="@Model.IdArticolo" />
                         <input type="number" name="quantity" min="1" max="99" value="1" />
-                        <input type="submit" value="Add to cart" />
+                        <input type="submit" value="Aggiungi al carrello" />
+
+                        <script>
+        $(document).ready(function() {
+            $('#addToCart').click(function() {
+                $.ajax({
+                    url: '@Url.Action("AddToCart", "Articoli")',
+                    type: 'POST',
+                    data: {
+                        productId: $('#productId').val(),
+                        quantity: $('#quantity').val()
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                        }
+                    }
+                });
+            });
+        });
+                        </script>
                     }
                 }
                 @if (isUserAdmin) //Se l'utente è admin, mostro il pulsante per modificare

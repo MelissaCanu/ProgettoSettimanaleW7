@@ -16,7 +16,6 @@ namespace ProgettoSettimanaleW7.Controllers
 
         // GET: Ordini
         [Authorize(Roles = "Admin")]
-
         public ActionResult Index()
         {
             var ordini = db.Ordini.Include(o => o.Utenti);
@@ -24,8 +23,7 @@ namespace ProgettoSettimanaleW7.Controllers
         }
 
         // GET: Ordini/Details/5
-        [Authorize(Roles = "Admin")]
-
+        [Authorize(Roles = "User, Admin")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -42,7 +40,6 @@ namespace ProgettoSettimanaleW7.Controllers
 
         // GET: Ordini/Create
         [Authorize(Roles = "Admin")]
-
         public ActionResult Create()
         {
             ViewBag.IdUtente = new SelectList(db.Utenti, "IdUtente", "Username");
@@ -55,7 +52,6 @@ namespace ProgettoSettimanaleW7.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-
         public ActionResult Create([Bind(Include = "IdOrdine,IdUtente,Indirizzo,IsEvaso,Note")] Ordini ordini)
         {
             if (ModelState.IsValid)
@@ -71,7 +67,6 @@ namespace ProgettoSettimanaleW7.Controllers
 
         // GET: Ordini/Edit/5
         [Authorize(Roles = "Admin")]
-
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -93,7 +88,6 @@ namespace ProgettoSettimanaleW7.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-
         public ActionResult Edit([Bind(Include = "IdOrdine,IdUtente,Indirizzo,IsEvaso,Note")] Ordini ordini)
         {
             if (ModelState.IsValid)
@@ -107,8 +101,7 @@ namespace ProgettoSettimanaleW7.Controllers
         }
 
         // GET: Ordini/Delete/5
-        [Authorize(Roles = "Admin")]
-
+        [Authorize(Roles = "User, Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -124,11 +117,9 @@ namespace ProgettoSettimanaleW7.Controllers
         }
 
         // POST: Ordini/Delete/5
-
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-
+        [Authorize(Roles = "User, Admin")]
         public ActionResult DeleteConfirmed(int id)
         {
             Ordini ordini = db.Ordini.Find(id);
@@ -136,7 +127,6 @@ namespace ProgettoSettimanaleW7.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
 
         protected override void Dispose(bool disposing)
         {
@@ -148,11 +138,16 @@ namespace ProgettoSettimanaleW7.Controllers
         }
 
         //CARRELLO - CHECKOUT
-
         [Authorize(Roles = "User")]
-        public ActionResult Checkout(int id)
+        public ActionResult Checkout()
         {
-            var order = db.Ordini.Include(o => o.DettagliOrdini.Select(d => d.Articoli)).SingleOrDefault(o => o.IdOrdine == id);
+            var user = db.Utenti.FirstOrDefault(u => u.Username == User.Identity.Name);
+            if (user == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var order = db.Ordini.Include(o => o.DettagliOrdini.Select(d => d.Articoli)).SingleOrDefault(o => o.IdUtente == user.IdUtente && !o.IsEvaso);
             if (order == null)
             {
                 return HttpNotFound();
@@ -160,9 +155,9 @@ namespace ProgettoSettimanaleW7.Controllers
             return View(order);
         }
 
+
         [HttpPost]
         [Authorize(Roles = "User")]
-
         public ActionResult CompleteOrder(int id, string shippingAddress, string notes)
         {
             var order = db.Ordini.Find(id);

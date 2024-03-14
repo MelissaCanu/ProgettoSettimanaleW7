@@ -4,6 +4,20 @@
     ViewBag.Title = "Index";
     var isUserAdmin = ViewBag.IsUserAdmin; // Recupero il valore della variabile IsUserAdmin dalla ViewBag per capire se l'utente è admin o meno
 }
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 
 <h2>Le nostre pizze</h2>
 @*Se lo user è admin, mostro il pulsante per aggiungere una nuova pizza*@
@@ -24,7 +38,7 @@
                     <h5 class="card-title">@Html.DisplayFor(modelItem => item.Nome)</h5>
                     <p class="card-text">Prezzo: @Html.DisplayFor(modelItem => item.Prezzo)</p>
                     <p class="card-text">Tempo di consegna: @Html.DisplayFor(modelItem => item.TempoConsegna) minuti</p>
-@*Se l'utente è autenticato e non è admin, mostro il pulsante per aggiungere al carrello e la quantità da aggiungere*@
+                    @*Se l'utente è autenticato e non è admin, mostro il pulsante per aggiungere al carrello e la quantità da aggiungere*@
                     @if (Request.IsAuthenticated && !isUserAdmin)
                     {
                         using (Html.BeginForm("AddToCart", "Articoli"))
@@ -35,7 +49,7 @@
                         }
                     }
                     <div class="mt-auto">
-@*Se l'utente è admin, mostro i pulsanti per modificare, vedere i dettagli e cancellare*@
+                        @*Se l'utente è admin, mostro i pulsanti per modificare, vedere i dettagli e cancellare*@
                         @if (isUserAdmin)
                         {
                             <a href="@Url.Action("Edit", "Articoli", new { id = item.IdArticolo })" class="btn btn-warning">Modifica</a>
