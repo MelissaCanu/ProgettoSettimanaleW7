@@ -5,10 +5,18 @@
 }
 
 <h2>Riepilogo ordine</h2>
+<p>ID Ordine: @Model.IdOrdine</p>
 
 @foreach (var item in Model.DettagliOrdini)
 {
-    <p>@item.Articoli.Nome: @item.Quantita x @item.Articoli.Prezzo = @item.PrezzoTotale</p>
+    <p>
+        @item.Articoli.Nome: @item.Quantita x @item.Articoli.Prezzo = @item.PrezzoTotale
+        @using (Html.BeginForm("RemoveFromCart", "Ordini"))
+        {
+            @Html.Hidden("productId", item.Articoli.IdArticolo)
+            <input type="submit" value="Rimuovi" />
+        }
+    </p>
 }
 
 <p>Costo totale: @Model.DettagliOrdini.Sum(i => i.PrezzoTotale)</p>

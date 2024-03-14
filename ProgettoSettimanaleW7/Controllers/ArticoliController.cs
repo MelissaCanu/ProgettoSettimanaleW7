@@ -174,30 +174,42 @@ namespace ProgettoSettimanaleW7.Controllers
         [Authorize(Roles = "User")]
         public ActionResult AddToCart(int productId, int quantity)
         {
-            // Recupera l'utente corrente
+            // Recupero l'utente corrente
             var user = db.Utenti.FirstOrDefault(u => u.Username == User.Identity.Name);
             if (user == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Utente non trovato");
             }
 
-            // Cerca un ordine esistente non evaso per l'utente corrente
+            // Cerco un ordine esistente non evaso per l'utente corrente
             var order = db.Ordini.SingleOrDefault(o => o.IdUtente == user.IdUtente && !o.IsEvaso);
 
-            // Se non esiste un ordine, creane uno nuovo
+            // Se non esiste un ordine, ne creo uno nuovo
             if (order == null)
             {
                 order = new Ordini { IdUtente = user.IdUtente, IsEvaso = false, DettagliOrdini = new List<DettagliOrdini>() };
                 db.Ordini.Add(order);
             }
 
-            // Aggiungi il prodotto all'ordine
-            var product = db.Articoli.Find(productId);
-            if (product == null)
+            // Cerco un DettagliOrdini esistente per l'articolo specificato
+            var orderDetail = order.DettagliOrdini.FirstOrDefault(d => d.Articoli.IdArticolo == productId);
+
+            // Se esiste, incremento la quantità - altrimenti creo un nuovo DettagliOrdini
+            if (orderDetail != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.NotFound, "Prodotto non trovato");
+                orderDetail.Quantita += quantity;
+                orderDetail.PrezzoTotale = orderDetail.Articoli.Prezzo * orderDetail.Quantita;
             }
-            order.DettagliOrdini.Add(new DettagliOrdini { Articoli = product, Quantita = quantity, PrezzoTotale = product.Prezzo * quantity });
+            else
+            {
+                // Aggiungo il prodotto all'ordine
+                var product = db.Articoli.Find(productId);
+                if (product == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.NotFound, "Prodotto non trovato");
+                }
+                order.DettagliOrdini.Add(new DettagliOrdini { Articoli = product, Quantita = quantity, PrezzoTotale = product.Prezzo * quantity });
+            }
 
             try
             {
@@ -216,9 +228,13 @@ namespace ProgettoSettimanaleW7.Controllers
                 TempData["ErrorMessage"] = "Errore durante il salvataggio dei dati";
             }
 
-            // Reindirizza alla pagina di riepilogo dell'ordine
-            return RedirectToAction("Index");
+             return RedirectToAction("Index");
         }
+
+       
+
+
+
 
 
 

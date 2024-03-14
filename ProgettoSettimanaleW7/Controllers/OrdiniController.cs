@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -155,6 +156,7 @@ namespace ProgettoSettimanaleW7.Controllers
             return View(order);
         }
 
+        //CARRELLO - COMPLETA ORDINE
 
         [HttpPost]
         [Authorize(Roles = "User")]
@@ -188,6 +190,57 @@ namespace ProgettoSettimanaleW7.Controllers
 
             // Se la validazione fallisce, ritorna alla vista con l'ordine
             return View(order);
+        }
+
+        //CARRELLO - RIMUOVI DAL CARRELLO
+
+        [HttpPost]
+        [Authorize(Roles = "User")]
+        public ActionResult RemoveFromCart(int productId)
+        {
+            // Recupero l'utente corrente
+            var user = db.Utenti.FirstOrDefault(u => u.Username == User.Identity.Name);
+            if (user == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Utente non trovato");
+            }
+
+            // Cerco un ordine esistente non evaso per l'utente corrente
+            var order = db.Ordini.SingleOrDefault(o => o.IdUtente == user.IdUtente && !o.IsEvaso);
+            if (order == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Ordine non trovato");
+            }
+
+            // Cerco un DettagliOrdini esistente per l'articolo specificato
+            var orderDetail = order.DettagliOrdini.FirstOrDefault(d => d.Articoli.IdArticolo == productId);
+            if (orderDetail == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Articolo non trovato nell'ordine");
+            }
+
+            // Rimuovo l'articolo dall'ordine
+            order.DettagliOrdini.Remove(orderDetail);
+            db.DettagliOrdini.Remove(orderDetail);
+
+            try
+            {
+                db.SaveChanges();
+                TempData["SuccessMessage"] = "Prodotto rimosso dal carrello con successo!";
+            }
+            catch (DbEntityValidationException ex)
+            {
+                foreach (var entityValidationErrors in ex.EntityValidationErrors)
+                {
+                    foreach (var validationError in entityValidationErrors.ValidationErrors)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Property: " + validationError.PropertyName + " Error: " + validationError.ErrorMessage);
+                    }
+                }
+                TempData["ErrorMessage"] = "Errore durante il salvataggio dei dati";
+            }
+
+            return RedirectToAction("Checkout");
         }
 
 
