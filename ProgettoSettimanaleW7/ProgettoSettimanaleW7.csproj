@@ -211,6 +211,10 @@
     <Compile Include="Migrations\202403121614353_RuoloDA.designer.cs">
       <DependentUpon>202403121614353_RuoloDA.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202403142044351_AddDate.cs" />
+    <Compile Include="Migrations\202403142044351_AddDate.designer.cs">
+      <DependentUpon>202403142044351_AddDate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Articoli.cs" />
     <Compile Include="Models\CustomRoleProvider.cs" />
@@ -396,6 +400,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202403121614353_RuoloDA.resx">
       <DependentUpon>202403121614353_RuoloDA.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202403142044351_AddDate.resx">
+      <DependentUpon>202403142044351_AddDate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

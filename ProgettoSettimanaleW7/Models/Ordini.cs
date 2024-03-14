@@ -15,6 +15,9 @@ namespace ProgettoSettimanaleW7.Models
         [ForeignKey("Utenti")]
         public int IdUtente { get; set; }
 
+        [Display(Name = "Data Ordine")]
+        public DateTime DataOrdine { get; set; }
+
         [StringLength(100)]
         public string Indirizzo { get; set; }
 

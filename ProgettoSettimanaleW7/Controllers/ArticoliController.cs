@@ -186,10 +186,10 @@ namespace ProgettoSettimanaleW7.Controllers
 
             // Se non esiste un ordine, ne creo uno nuovo
             if (order == null)
-            {
-                order = new Ordini { IdUtente = user.IdUtente, IsEvaso = false, DettagliOrdini = new List<DettagliOrdini>() };
-                db.Ordini.Add(order);
-            }
+                {
+                    order = new Ordini { IdUtente = user.IdUtente, IsEvaso = false, DettagliOrdini = new List<DettagliOrdini>(), DataOrdine = DateTime.Now };
+                    db.Ordini.Add(order);
+                }
 
             // Cerco un DettagliOrdini esistente per l'articolo specificato
             var orderDetail = order.DettagliOrdini.FirstOrDefault(d => d.Articoli.IdArticolo == productId);

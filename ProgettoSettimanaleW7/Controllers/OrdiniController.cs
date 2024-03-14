@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using ProgettoSettimanaleW7.Models;
@@ -57,6 +58,7 @@ namespace ProgettoSettimanaleW7.Controllers
         {
             if (ModelState.IsValid)
             {
+                ordini.DataOrdine = DateTime.Now; // Aggiungi questa linea
                 db.Ordini.Add(ordini);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -184,7 +186,7 @@ namespace ProgettoSettimanaleW7.Controllers
             {
                 db.Entry(order).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("UserDetails", new {id = order.IdOrdine});
+                return RedirectToAction("UserDetails", new { id = order.IdOrdine });
             }
 
             return View(order);
@@ -251,7 +253,7 @@ namespace ProgettoSettimanaleW7.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            
+
             Ordini ordini = db.Ordini.Find(id);
             if (ordini == null)
             {
@@ -262,7 +264,7 @@ namespace ProgettoSettimanaleW7.Controllers
 
         //ORDINI - GESTIONE & EVASIONE - ADMIN
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult ManageOrders()
         {
             var orders = db.Ordini.ToList();
@@ -270,7 +272,7 @@ namespace ProgettoSettimanaleW7.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult MarkAsEvaso(int id)
         {
             var order = db.Ordini.Find(id);
@@ -287,6 +289,26 @@ namespace ProgettoSettimanaleW7.Controllers
             return RedirectToAction("ManageOrders");
         }
 
+        //CHIAMATE ASYNC PER QUERY AL DB 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> GetTotalOrders()
+        {
+            //recupero il numero totale di ordini evasi e lo ritorno come JSON 
+            var totalOrders = await db.Ordini.CountAsync(o => o.IsEvaso);
+            return Json(totalOrders, JsonRequestBehavior.AllowGet);
+        }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> GetTotalRevenue(DateTime date)
+        {   
+            //recupero il totale delle entrate per una data specifica e lo ritorno come JSON
+            var totalRevenue = await db.Ordini
+                .Where(o => DbFunctions.TruncateTime(o.DataOrdine) == date.Date && o.IsEvaso)
+                .SumAsync(o => o.DettagliOrdini.Sum(d => d.PrezzoTotale));
+            return Json(totalRevenue, JsonRequestBehavior.AllowGet);
+
+        }
     }
 }

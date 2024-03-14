@@ -6,6 +6,7 @@
 
 <h2>Riepilogo ordine</h2>
 <p>Ordine N: @Model.IdOrdine</p>
+<p class="card-text">Data dell'ordine: @Model.DataOrdine.ToString("dd/MM/yyyy")</p>
 
 @foreach (var item in Model.DettagliOrdini)
 {

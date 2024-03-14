@@ -6,8 +6,12 @@
 
 <h2>Gestione ordini</h2>
 
+<h3>Ordini totali evasi: <span id="totalOrders"></span></h3>
+<h3>Totale incassato oggi: <span id="totalRevenue"></span></h3>
+
 <table class="table">
     <tr>
+        <th>@Html.DisplayNameFor(model => model.DataOrdine)</th>
         <th>@Html.DisplayNameFor(model => model.Utenti.Username)</th>
         <th>@Html.DisplayNameFor(model => model.Indirizzo)</th>
         <th>@Html.DisplayNameFor(model => model.IsEvaso)</th>
@@ -18,6 +22,7 @@
     @foreach (var item in Model)
     {
         <tr>
+            <td>@Html.DisplayFor(modelItem => item.DataOrdine)</td>
             <td>@Html.DisplayFor(modelItem => item.Utenti.Username)</td>
             <td>@Html.DisplayFor(modelItem => item.Indirizzo)</td>
             <td>@Html.DisplayFor(modelItem => item.IsEvaso)</td>
@@ -34,3 +39,19 @@
         </tr>
     }
 </table>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.get('@Url.Action("GetTotalOrders", "Ordini")', function(data) {
+            $('#totalOrders').text(data);
+        });
+
+        // Usa la data corrente come esempio
+        var date = new Date();
+        var dateString = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+        $.get('@Url.Action("GetTotalRevenue", "Ordini")', { date: dateString }, function(data) {
+            $('#totalRevenue').text(data);
+        });
+    });
+</script>
