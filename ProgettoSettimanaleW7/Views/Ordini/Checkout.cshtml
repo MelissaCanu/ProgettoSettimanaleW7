@@ -23,7 +23,7 @@
 
 @using (Html.BeginForm("CompleteOrder", "Ordini"))
 {
-    @Html.HiddenFor(model => model.IdOrdine)
+    @Html.Hidden("id", Model.IdOrdine)
     <div class="form-group">
         <label for="shippingAddress">Indirizzo di spedizione</label>
         <input type="text" class="form-control" id="shippingAddress" name="shippingAddress" required>

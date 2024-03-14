@@ -24,7 +24,7 @@ namespace ProgettoSettimanaleW7.Controllers
         }
 
         // GET: Ordini/Details/5
-        [Authorize(Roles = "User, Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -102,7 +102,7 @@ namespace ProgettoSettimanaleW7.Controllers
         }
 
         // GET: Ordini/Delete/5
-        [Authorize(Roles = "User, Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -168,7 +168,7 @@ namespace ProgettoSettimanaleW7.Controllers
                 return HttpNotFound();
             }
 
-            // Aggiungi la validazione dell'indirizzo qui
+            // Aggiungo la validazione dell'indirizzo qui
             if (string.IsNullOrEmpty(shippingAddress))
             {
                 ModelState.AddModelError("shippingAddress", "L'indirizzo di spedizione è obbligatorio.");
@@ -185,10 +185,9 @@ namespace ProgettoSettimanaleW7.Controllers
             {
                 db.Entry(order).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("UserDetails", new {id = order.IdOrdine});
             }
 
-            // Se la validazione fallisce, ritorna alla vista con l'ordine
             return View(order);
         }
 
@@ -243,6 +242,24 @@ namespace ProgettoSettimanaleW7.Controllers
             return RedirectToAction("Checkout");
         }
 
+        // CARRELLO - DETTAGLI ORDINE PER USER 
+        [Authorize(Roles = "User")]
+
+        //recupero l'user loggato e i suoi ordini non evasi
+        public ActionResult UserDetails(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            
+            Ordini ordini = db.Ordini.Find(id);
+            if (ordini == null)
+            {
+                return HttpNotFound();
+            }
+            return View(ordini);
+        }
 
 
 

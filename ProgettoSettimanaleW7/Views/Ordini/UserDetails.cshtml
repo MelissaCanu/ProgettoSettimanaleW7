@@ -1,0 +1,24 @@
+﻿@model ProgettoSettimanaleW7.Models.Ordini
+
+@{
+    ViewBag.Title = "Dettagli ordine";
+}
+
+<div class="card">
+    <div class="card-header">
+        Dettagli ordine
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Ordine ID: @Model.IdOrdine</h5>
+        <p class="card-text">Indirizzo di spedizione: @Model.Indirizzo</p>
+        <p class="card-text">Note: @Model.Note</p>
+        <h6 class="card-subtitle mb-2 text-muted">Articoli:</h6>
+        <ul>
+            @foreach (var item in Model.DettagliOrdini)
+            {
+                <li>@item.Articoli.Nome: @item.Quantita x @item.Articoli.Prezzo = @item.PrezzoTotale</li>
+            }
+        </ul>
+        <p class="card-text">Costo totale: @Model.DettagliOrdini.Sum(i => i.PrezzoTotale)</p>
+    </div>
+</div>
