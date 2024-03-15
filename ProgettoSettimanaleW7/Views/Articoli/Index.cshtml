@@ -19,8 +19,15 @@
     </div>
 }
 
+@if (isUserAdmin)
+{
+    <h2 class="text-bg-primary text-center">Pizze</h2>
+} else
+            {
+    <h2 class="text-bg-primary text-center">Le nostre pizze</h2>
 
-<h2>Le nostre pizze</h2>
+            }
+
 @*Se lo user è admin, mostro il pulsante per aggiungere una nuova pizza*@
 <p>
     @if (isUserAdmin)

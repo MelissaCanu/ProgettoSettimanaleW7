@@ -1,0 +1,47 @@
+﻿@model ProgettoSettimanaleW7.Models.Ordini
+
+@{
+    ViewBag.Title = "Dettagli ordine";
+}
+
+<h2 class="text-bg-primary text-center">Dettagli Ordine</h2>
+
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>@Html.DisplayNameFor(model => model.Utenti.Username)</dt>
+        <dd>@Html.DisplayFor(model => model.Utenti.Username)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.DataOrdine)</dt>
+        <dd>@Html.DisplayFor(model => model.DataOrdine)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Indirizzo)</dt>
+        <dd>@Html.DisplayFor(model => model.Indirizzo)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Note)</dt>
+        <dd>@Html.DisplayFor(model => model.Note)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.IsEvaso)</dt>
+        <dd>@Html.DisplayFor(model => model.IsEvaso)</dd>
+    </dl>
+</div>
+
+<h3>Articoli ordinati:</h3>
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.DettagliOrdini.First().Articoli.Nome)</th>
+        <th>@Html.DisplayNameFor(model => model.DettagliOrdini.First().Quantita)</th>
+    </tr>
+    @foreach (var item in Model.DettagliOrdini)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.Articoli.Nome)</td>
+            <td>@Html.DisplayFor(modelItem => item.Quantita)</td>
+        </tr>
+    }
+</table>
+
+<p>
+    @Html.ActionLink("Torna alla lista degli ordini", "ManageOrders", null, new { @class = "my-2 text-info" })
+</p>

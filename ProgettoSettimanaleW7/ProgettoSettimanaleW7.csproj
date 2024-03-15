@@ -306,7 +306,6 @@
     <Content Include="Views\DettagliOrdini\Index.cshtml" />
     <Content Include="Views\Ordini\Create.cshtml" />
     <Content Include="Views\Ordini\Delete.cshtml" />
-    <Content Include="Views\Ordini\Edit.cshtml" />
     <Content Include="Views\Utenti\Create.cshtml" />
     <Content Include="Views\Utenti\Delete.cshtml" />
     <Content Include="Views\Utenti\Details.cshtml" />
@@ -317,6 +316,7 @@
     <Content Include="Views\Ordini\Checkout.cshtml" />
     <Content Include="Views\Ordini\UserDetails.cshtml" />
     <Content Include="Views\Ordini\ManageOrders.cshtml" />
+    <Content Include="Views\Ordini\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

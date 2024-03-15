@@ -77,93 +77,6 @@ namespace ProgettoSettimanaleW7.Controllers
         }
 
 
-
-
-        // GET: Ordini/Edit/5
-        [Authorize(Roles = "Admin")]
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            // Include Utenti and DettagliOrdini when fetching the order
-            Ordini ordini = db.Ordini.Include(o => o.Utenti).Include(o => o.DettagliOrdini).SingleOrDefault(o => o.IdOrdine == id);
-            if (ordini == null)
-            {
-                return HttpNotFound();
-            }
-
-            var viewModel = new OrderEditViewModel
-            {
-                Order = ordini,
-                ArticoliList = new SelectList(db.Articoli, "IdArticolo", "Nome"),
-                // Add this line to populate the SelectList for 'IdUtente'
-                IdUtenteList = new SelectList(db.Utenti, "IdUtente", "Username")
-            };
-
-            return View(viewModel);
-        }
-
-
-
-
-
-        // POST: Ordini/Edit/5
-        // Per la protezione da attacchi di overposting, abilitare le proprietà a cui eseguire il binding. 
-        // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public ActionResult Edit(OrderEditViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                //debug per vedere se l'id ordine è corretto 
-                System.Diagnostics.Debug.WriteLine($"IdOrdine: {model.Order.IdOrdine}");
-
-                var existingOrder = db.Ordini.Include(o => o.DettagliOrdini)
-                                             .SingleOrDefault(o => o.IdOrdine == model.Order.IdOrdine);
-
-                System.Diagnostics.Debug.WriteLine($"IdOrdine: {model.Order.IdOrdine}");
-
-                db.Entry(existingOrder).Property(o => o.IdUtente).CurrentValue = model.Order.IdUtente;
-
-                //qua controllo se ci sono dettagli ordine da rimuovere o aggiungere
-                if (model?.Order?.DettagliOrdini != null)
-                {
-                    foreach (var existingDetail in existingOrder.DettagliOrdini.ToList())
-                    {
-                        if (!model.Order.DettagliOrdini.Any(d => d.IdDettagliOrdine == existingDetail.IdDettagliOrdine))
-                            db.DettagliOrdini.Remove(existingDetail);
-                    }
-
-                    foreach (var detail in model.Order.DettagliOrdini)
-                    {
-                        var existingDetail = existingOrder.DettagliOrdini
-                            .Where(d => d.IdDettagliOrdine == detail.IdDettagliOrdine)
-                            .SingleOrDefault();
-
-                        if (existingDetail != null)
-                            //aggiorno i valori del dettaglio ordine se esiste nel db 
-                            db.Entry(existingDetail).CurrentValues.SetValues(detail);
-                        else
-                        {
-                            //altrimenti aggiungo un nuovo dettaglio ordine al db 
-                            existingOrder.DettagliOrdini.Add(detail);
-                        }
-                    }
-                }
-
-                db.SaveChanges();
-
-                return RedirectToAction("ManageOrders");
-            }
-            return View(model.Order);
-        }
-
-
-
         // GET: Ordini/Delete/5
         [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
@@ -192,7 +105,23 @@ namespace ProgettoSettimanaleW7.Controllers
             return RedirectToAction("ManageOrders");
         }
 
-        protected override void Dispose(bool disposing)
+        [Authorize(Roles = "Admin")]
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            // Includo utenti e dettagli ordini quando recupero l'ordine così da poter visualizzare i dettagli 
+            Ordini ordini = db.Ordini.Include(o => o.Utenti).Include(o => o.DettagliOrdini.Select(d => d.Articoli)).SingleOrDefault(o => o.IdOrdine == id);
+            if (ordini == null)
+            {
+                return HttpNotFound();
+            }
+            return View(ordini);
+        }
+
+         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {

@@ -4,10 +4,12 @@
     ViewBag.Title = "Gestione ordini";
 }
 
-<h2>Gestione ordini</h2>
+<h2 class="text-bg-primary text-center">Gestione Ordini</h2>
 
 <h3>Ordini totali evasi: <span id="totalOrders"></span></h3>
+<hr />
 <h3>Totale incassato oggi: <span id="totalRevenue"></span></h3>
+<hr />
 
 <div class="d-flex justify-content-start">
     <div class="p-2">@Html.ActionLink("Aggiungi Ordine", "Create", "Ordini", new { area = "" }, new { @class = "btn btn-info my-3" })</div>
@@ -39,6 +41,7 @@
                         <input type="submit" value="Segna come evaso" />
                     }
                 }
+                @Html.ActionLink("Dettagli", "Details", "Ordini", new { id = item.IdOrdine }, new { @class = "btn btn-info my-3" })
                 @Html.ActionLink("Elimina Ordine", "Delete", "Ordini", new { id = item.IdOrdine }, new { @class = "btn btn-danger my-3" })
             </td>
         </tr>

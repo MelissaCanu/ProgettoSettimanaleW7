@@ -29,7 +29,7 @@
                         <li>@Html.ActionLink("Ordini", "ManageOrders", "Ordini", new { area = "" }, new { @class = "nav-link" })</li>                    }
                     @if (User.IsInRole("User"))
                     {
-                        <li>@Html.ActionLink("Checkout", "Checkout", "Ordini", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Carrello", "Checkout", "Ordini", new { area = "" }, new { @class = "nav-link" })</li>
                     }
                 </ul>
                 <ul class="navbar-nav">
