@@ -44,7 +44,11 @@ namespace ProgettoSettimanaleW7.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
-            ViewBag.IdUtente = new SelectList(db.Utenti, "IdUtente", "Username");
+            ViewBag.Articoli = new SelectList(db.Articoli, "IdArticolo", "Nome");
+
+            // Add this line to populate the ViewData for 'IdUtente'
+            ViewData["IdUtente"] = new SelectList(db.Utenti, "IdUtente", "Username");
+
             return View();
         }
 
@@ -54,19 +58,51 @@ namespace ProgettoSettimanaleW7.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public ActionResult Create([Bind(Include = "IdOrdine,IdUtente,Indirizzo,IsEvaso,Note")] Ordini ordini)
+        public ActionResult Create(Ordini ordini, int IdArticolo)
         {
             if (ModelState.IsValid)
             {
-                ordini.DataOrdine = DateTime.Now; // Aggiungi questa linea
+                if (ordini.DataOrdine < new DateTime(1753, 1, 1) || ordini.DataOrdine > new DateTime(9999, 12, 31))
+                {
+                    // Handle out-of-range DateTime value
+                    // You could set it to a default value, or return an error to the user
+                    ordini.DataOrdine = DateTime.Now; // example of setting a default value
+                }
+
                 db.Ordini.Add(ordini);
                 db.SaveChanges();
+
+                var dettagliOrdini = new DettagliOrdini
+                {
+                    IdOrdine = ordini.IdOrdine,
+                    IdArticolo = IdArticolo,
+                    // Imposta gli altri campi di DettagliOrdini qui
+                };
+
+                db.DettagliOrdini.Add(dettagliOrdini);
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    foreach (var validationErrors in ex.EntityValidationErrors)
+                    {
+                        foreach (var validationError in validationErrors.ValidationErrors)
+                        {
+                            System.Diagnostics.Trace.TraceInformation("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
+                        }
+                    }
+                }
+
                 return RedirectToAction("Index");
             }
 
-            ViewBag.IdUtente = new SelectList(db.Utenti, "IdUtente", "Username", ordini.IdUtente);
+            ViewBag.Articoli = new SelectList(db.Articoli, "IdArticolo", "Nome", IdArticolo);
             return View(ordini);
         }
+
+
 
         // GET: Ordini/Edit/5
         [Authorize(Roles = "Admin")]
@@ -304,7 +340,7 @@ namespace ProgettoSettimanaleW7.Controllers
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> GetTotalRevenue(DateTime date)
-        {   
+        {
             //recupero il totale delle entrate per una data specifica e lo ritorno come JSON
             var totalRevenue = await db.Ordini
                 .Where(o => DbFunctions.TruncateTime(o.DataOrdine) == date.Date && o.IsEvaso)
