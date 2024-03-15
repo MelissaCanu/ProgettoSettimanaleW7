@@ -9,6 +9,10 @@
 <h3>Ordini totali evasi: <span id="totalOrders"></span></h3>
 <h3>Totale incassato oggi: <span id="totalRevenue"></span></h3>
 
+<div class="d-flex justify-content-start">
+    <div class="p-2">@Html.ActionLink("Aggiungi Ordine", "Create", "Ordini", new { area = "" }, new { @class = "btn btn-info my-3" })</div>
+</div>
+
 <table class="table">
     <tr>
         <th>@Html.DisplayNameFor(model => model.DataOrdine)</th>
@@ -35,6 +39,7 @@
                         <input type="submit" value="Segna come evaso" />
                     }
                 }
+                @Html.ActionLink("Elimina Ordine", "Delete", "Ordini", new { id = item.IdOrdine }, new { @class = "btn btn-danger my-3" })
             </td>
         </tr>
     }
@@ -42,12 +47,13 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
+    //Ordini totali evasi
     $(document).ready(function() {
         $.get('@Url.Action("GetTotalOrders", "Ordini")', function(data) {
             $('#totalOrders').text(data);
         });
 
-        // Usa la data corrente come esempio
+        //Totale incassato oggi
         var date = new Date();
         var dateString = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
         $.get('@Url.Action("GetTotalRevenue", "Ordini")', { date: dateString }, function(data) {

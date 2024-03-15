@@ -9,36 +9,13 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using ProgettoSettimanaleW7.Models;
+using ProgettoSettimanaleW7.ViewModel;
 
 namespace ProgettoSettimanaleW7.Controllers
 {
     public class OrdiniController : Controller
     {
         private ModelDbContext db = new ModelDbContext();
-
-        // GET: Ordini
-        [Authorize(Roles = "Admin")]
-        public ActionResult Index()
-        {
-            var ordini = db.Ordini.Include(o => o.Utenti);
-            return View(ordini.ToList());
-        }
-
-        // GET: Ordini/Details/5
-        [Authorize(Roles = "Admin")]
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Ordini ordini = db.Ordini.Find(id);
-            if (ordini == null)
-            {
-                return HttpNotFound();
-            }
-            return View(ordini);
-        }
 
         // GET: Ordini/Create
         [Authorize(Roles = "Admin")]
@@ -62,13 +39,13 @@ namespace ProgettoSettimanaleW7.Controllers
         {
             if (ModelState.IsValid)
             {
+                //aggiungo l'ordine al db
+                db.Ordini.Add(ordini);
+                db.SaveChanges();
                 //imposto la data dell'ordine e lo stato di evasione
                 ordini.DataOrdine = DateTime.Now;
                 ordini.IsEvaso = false;
 
-                //aggiungo l'ordine al db
-                db.Ordini.Add(ordini);
-                db.SaveChanges();
 
                 // prendo l'articolo selezionato e calcolo il prezzo totale
                 var articolo = db.Articoli.Find(IdArticolo);
@@ -91,7 +68,7 @@ namespace ProgettoSettimanaleW7.Controllers
                 db.DettagliOrdini.Add(dettagliOrdini);
                 db.SaveChanges();
 
-                return RedirectToAction("Index");
+                return RedirectToAction("ManageOrders");
             }
 
             //questo mi serve per popolare la dropdownlist con gli utenti esistenti
@@ -110,14 +87,27 @@ namespace ProgettoSettimanaleW7.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ordini ordini = db.Ordini.Find(id);
+            // Include Utenti and DettagliOrdini when fetching the order
+            Ordini ordini = db.Ordini.Include(o => o.Utenti).Include(o => o.DettagliOrdini).SingleOrDefault(o => o.IdOrdine == id);
             if (ordini == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.IdUtente = new SelectList(db.Utenti, "IdUtente", "Username", ordini.IdUtente);
-            return View(ordini);
+
+            var viewModel = new OrderEditViewModel
+            {
+                Order = ordini,
+                ArticoliList = new SelectList(db.Articoli, "IdArticolo", "Nome"),
+                // Add this line to populate the SelectList for 'IdUtente'
+                IdUtenteList = new SelectList(db.Utenti, "IdUtente", "Username")
+            };
+
+            return View(viewModel);
         }
+
+
+
+
 
         // POST: Ordini/Edit/5
         // Per la protezione da attacchi di overposting, abilitare le proprietà a cui eseguire il binding. 
@@ -125,17 +115,54 @@ namespace ProgettoSettimanaleW7.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public ActionResult Edit([Bind(Include = "IdOrdine,IdUtente,Indirizzo,IsEvaso,Note")] Ordini ordini)
+        public ActionResult Edit(OrderEditViewModel model)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(ordini).State = EntityState.Modified;
+                //debug per vedere se l'id ordine è corretto 
+                System.Diagnostics.Debug.WriteLine($"IdOrdine: {model.Order.IdOrdine}");
+
+                var existingOrder = db.Ordini.Include(o => o.DettagliOrdini)
+                                             .SingleOrDefault(o => o.IdOrdine == model.Order.IdOrdine);
+
+                System.Diagnostics.Debug.WriteLine($"IdOrdine: {model.Order.IdOrdine}");
+
+                db.Entry(existingOrder).Property(o => o.IdUtente).CurrentValue = model.Order.IdUtente;
+
+                //qua controllo se ci sono dettagli ordine da rimuovere o aggiungere
+                if (model?.Order?.DettagliOrdini != null)
+                {
+                    foreach (var existingDetail in existingOrder.DettagliOrdini.ToList())
+                    {
+                        if (!model.Order.DettagliOrdini.Any(d => d.IdDettagliOrdine == existingDetail.IdDettagliOrdine))
+                            db.DettagliOrdini.Remove(existingDetail);
+                    }
+
+                    foreach (var detail in model.Order.DettagliOrdini)
+                    {
+                        var existingDetail = existingOrder.DettagliOrdini
+                            .Where(d => d.IdDettagliOrdine == detail.IdDettagliOrdine)
+                            .SingleOrDefault();
+
+                        if (existingDetail != null)
+                            //aggiorno i valori del dettaglio ordine se esiste nel db 
+                            db.Entry(existingDetail).CurrentValues.SetValues(detail);
+                        else
+                        {
+                            //altrimenti aggiungo un nuovo dettaglio ordine al db 
+                            existingOrder.DettagliOrdini.Add(detail);
+                        }
+                    }
+                }
+
                 db.SaveChanges();
-                return RedirectToAction("Index");
+
+                return RedirectToAction("ManageOrders");
             }
-            ViewBag.IdUtente = new SelectList(db.Utenti, "IdUtente", "Username", ordini.IdUtente);
-            return View(ordini);
+            return View(model.Order);
         }
+
+
 
         // GET: Ordini/Delete/5
         [Authorize(Roles = "Admin")]
@@ -162,7 +189,7 @@ namespace ProgettoSettimanaleW7.Controllers
             Ordini ordini = db.Ordini.Find(id);
             db.Ordini.Remove(ordini);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("ManageOrders");
         }
 
         protected override void Dispose(bool disposing)

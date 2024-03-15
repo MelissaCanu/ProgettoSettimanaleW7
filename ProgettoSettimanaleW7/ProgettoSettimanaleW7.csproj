@@ -227,6 +227,7 @@
     <Compile Include="Models\Ordini.cs" />
     <Compile Include="Models\Utenti.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\OrderEditViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -305,9 +306,7 @@
     <Content Include="Views\DettagliOrdini\Index.cshtml" />
     <Content Include="Views\Ordini\Create.cshtml" />
     <Content Include="Views\Ordini\Delete.cshtml" />
-    <Content Include="Views\Ordini\Details.cshtml" />
     <Content Include="Views\Ordini\Edit.cshtml" />
-    <Content Include="Views\Ordini\Index.cshtml" />
     <Content Include="Views\Utenti\Create.cshtml" />
     <Content Include="Views\Utenti\Delete.cshtml" />
     <Content Include="Views\Utenti\Details.cshtml" />
