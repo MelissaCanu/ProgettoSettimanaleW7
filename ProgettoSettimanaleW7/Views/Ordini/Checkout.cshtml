@@ -11,7 +11,7 @@
 @foreach (var item in Model.DettagliOrdini)
 {
     <p>
-        @item.Articoli.Nome: @item.Quantita x @item.Articoli.Prezzo = @item.PrezzoTotale
+        @item.Articoli.Nome: @item.Quantita x @item.Articoli.Prezzo = @item.PrezzoTotale €
         @using (Html.BeginForm("RemoveFromCart", "Ordini"))
         {
             @Html.Hidden("productId", item.Articoli.IdArticolo)
@@ -20,7 +20,7 @@
     </p>
 }
 
-<p>Costo totale: @Model.DettagliOrdini.Sum(i => i.PrezzoTotale)</p>
+<p>Costo totale: @Model.DettagliOrdini.Sum(i => i.PrezzoTotale) €</p>
 
 @using (Html.BeginForm("CompleteOrder", "Ordini"))
 {

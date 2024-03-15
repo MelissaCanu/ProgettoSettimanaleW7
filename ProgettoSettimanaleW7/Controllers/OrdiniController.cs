@@ -289,7 +289,9 @@ namespace ProgettoSettimanaleW7.Controllers
             return RedirectToAction("ManageOrders");
         }
 
+        //********************************************************************************************************************
         //CHIAMATE ASYNC PER QUERY AL DB 
+
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> GetTotalOrders()

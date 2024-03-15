@@ -51,7 +51,7 @@
         var date = new Date();
         var dateString = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
         $.get('@Url.Action("GetTotalRevenue", "Ordini")', { date: dateString }, function(data) {
-            $('#totalRevenue').text(data);
+            $('#totalRevenue').text(data + ' €');
         });
     });
 </script>
