@@ -215,6 +215,10 @@
     <Compile Include="Migrations\202403142044351_AddDate.designer.cs">
       <DependentUpon>202403142044351_AddDate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202403151027598_DateTimeToDateTime2.cs" />
+    <Compile Include="Migrations\202403151027598_DateTimeToDateTime2.designer.cs">
+      <DependentUpon>202403151027598_DateTimeToDateTime2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Articoli.cs" />
     <Compile Include="Models\CustomRoleProvider.cs" />
@@ -403,6 +407,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202403142044351_AddDate.resx">
       <DependentUpon>202403142044351_AddDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202403151027598_DateTimeToDateTime2.resx">
+      <DependentUpon>202403151027598_DateTimeToDateTime2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

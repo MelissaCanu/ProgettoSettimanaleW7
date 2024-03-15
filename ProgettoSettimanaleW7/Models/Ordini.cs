@@ -16,6 +16,8 @@ namespace ProgettoSettimanaleW7.Models
         public int IdUtente { get; set; }
 
         [Display(Name = "Data Ordine")]
+        [Column(TypeName = "datetime2")]
+
         public DateTime DataOrdine { get; set; }
 
         [StringLength(100)]

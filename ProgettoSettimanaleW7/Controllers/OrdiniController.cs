@@ -58,49 +58,47 @@ namespace ProgettoSettimanaleW7.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public ActionResult Create(Ordini ordini, int IdArticolo)
+        public ActionResult Create(Ordini ordini, int IdArticolo, int Quantita)
         {
             if (ModelState.IsValid)
             {
-                if (ordini.DataOrdine < new DateTime(1753, 1, 1) || ordini.DataOrdine > new DateTime(9999, 12, 31))
-                {
-                    // Handle out-of-range DateTime value
-                    // You could set it to a default value, or return an error to the user
-                    ordini.DataOrdine = DateTime.Now; // example of setting a default value
-                }
+                //imposto la data dell'ordine e lo stato di evasione
+                ordini.DataOrdine = DateTime.Now;
+                ordini.IsEvaso = false;
 
+                //aggiungo l'ordine al db
                 db.Ordini.Add(ordini);
                 db.SaveChanges();
 
+                // prendo l'articolo selezionato e calcolo il prezzo totale
+                var articolo = db.Articoli.Find(IdArticolo);
+                if (articolo == null)
+                {
+                    return HttpNotFound();
+                }
+ 
+                var totalPrice = articolo.Prezzo * Quantita;
+
+                // creo un nuovo dettaglio ordine e lo aggiungo al db
                 var dettagliOrdini = new DettagliOrdini
                 {
                     IdOrdine = ordini.IdOrdine,
                     IdArticolo = IdArticolo,
-                    // Imposta gli altri campi di DettagliOrdini qui
+                    Quantita = Quantita,
+                    PrezzoTotale = totalPrice
                 };
 
                 db.DettagliOrdini.Add(dettagliOrdini);
-                try
-                {
-                    db.SaveChanges();
-                }
-                catch (DbEntityValidationException ex)
-                {
-                    foreach (var validationErrors in ex.EntityValidationErrors)
-                    {
-                        foreach (var validationError in validationErrors.ValidationErrors)
-                        {
-                            System.Diagnostics.Trace.TraceInformation("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
-                        }
-                    }
-                }
+                db.SaveChanges();
 
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Articoli = new SelectList(db.Articoli, "IdArticolo", "Nome", IdArticolo);
+            //questo mi serve per popolare la dropdownlist con gli utenti esistenti
+            ViewBag.IdUtente = new SelectList(db.Utenti, "IdUtente", "Username", ordini.IdUtente);
             return View(ordini);
         }
+
 
 
 
