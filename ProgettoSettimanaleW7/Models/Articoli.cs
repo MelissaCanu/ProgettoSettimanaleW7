@@ -20,6 +20,9 @@ namespace ProgettoSettimanaleW7.Models
         [StringLength(200)]
         public string Immagine { get; set; }
 
+        [StringLength(200)]
+        public string Ingredienti { get; set; }
+
         [Required]
         public decimal Prezzo { get; set; }
 

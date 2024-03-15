@@ -28,6 +28,7 @@
             <img class="card-img-top img-fluid custom-img" src="@Url.Content("~/Content/img/" + Model.Immagine)" alt="@Model.Nome" onerror="this.onerror=null; this.src='@Url.Content("~/Content/img/default.jpg")'" />
             <div class="card-body">
                 <h5 class="card-title">@Html.DisplayFor(model => model.Nome)</h5>
+                <p class="card-text">@Html.DisplayFor(model => model.Ingredienti)</p>
                 <p class="card-text">Prezzo: @Html.DisplayFor(model => model.Prezzo)</p>
                 <p class="card-text">Tempo di consegna: @Html.DisplayFor(model => model.TempoConsegna) minuti</p>
 

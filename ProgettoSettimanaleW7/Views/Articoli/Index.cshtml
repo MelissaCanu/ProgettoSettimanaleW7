@@ -22,11 +22,12 @@
 @if (isUserAdmin)
 {
     <h2 class="text-bg-primary text-center">Pizze</h2>
-} else
-            {
+}
+else
+{
     <h2 class="text-bg-primary text-center">Le nostre pizze</h2>
 
-            }
+}
 
 @*Se lo user è admin, mostro il pulsante per aggiungere una nuova pizza*@
 <p>
@@ -44,6 +45,7 @@
                 <img class="card-img-top img-fluid" src="@Url.Content("~/Content/img/" + item.Immagine)" alt="@item.Nome" />
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">@Html.DisplayFor(modelItem => item.Nome)</h5>
+                    <p class="card-text">@Html.DisplayFor(modelItem => item.Ingredienti)</p>
                     <p class="card-text">Prezzo: @Html.DisplayFor(modelItem => item.Prezzo)</p>
                     <p class="card-text">Tempo di consegna: @Html.DisplayFor(modelItem => item.TempoConsegna) minuti</p>
                     @*Se l'utente è autenticato e non è admin, mostro il pulsante per aggiungere al carrello e la quantità da aggiungere*@
